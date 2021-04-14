@@ -1,0 +1,45 @@
+stages:
+  - prep
+  - build
+  - test
+
+prepare car:
+  stage: prep
+  script:
+    - mkdir build
+    - cd build
+    - touch car.txt
+  artifacts:
+    paths:
+      - build/
+
+author:
+  stage: build
+  script:
+    - mkdir meta
+    - cd meta
+    - echo $GITLAB_USER_NAME > author.txt
+  artifacts:
+    paths:
+      - meta/
+
+
+build car:
+  stage: build
+  script:
+    - cd build
+    - echo "chassis" >> car.txt
+    - echo "engine" >> car.txt
+    - echo "wheels" >> car.txt
+  artifacts:
+    paths:
+      - build/
+
+test car:
+  stage: test
+  script:
+    - test -f build/car.txt
+    - cd build
+    - grep "chassis" car.txt
+    - grep "engine" car.txt
+    - grep "wheels" car.txt
